@@ -1,32 +1,47 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div id="app" class="app">
+    <DashboardHeader/>
+    <div class="container-fluid">
+      <div class="row">
+        <Sidebar />
+        <transition enter-active-class="animated fadeIn">
+          <router-view />
+        </transition>
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-}
+<script>
+  import { Header as DashboardHeader, Sidebar, Navbar  } from './components/'
+  export default {
+    data (){
+      return{
+      }
+    },
+    components: {
+      DashboardHeader,
+      Navbar,
+      Sidebar
+    },
+    computed: {
+      name(){
+        return this.$route.name
+      },
+      list() {
+        return this.$route.matched
+      },
+      isAuth () {
+        return this.$route.path.match('auth')
+      }
+    }
+  }
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style lang="scss">
+  @import "./assets/bootstrap/bootstrap";
+  $fa-font-path: "../node_modules/font-awesome/fonts" !default;
+  @import "./assets/scss/font-awesome";
+  @import "./assets/style";
 </style>

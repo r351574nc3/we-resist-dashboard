@@ -1,21 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
+import Dashboard from './layouts/Dashboard.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
+      path : '',
       name: 'home',
-      component: Home
+      components:{
+          default: Dashboard
+      }
     },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    }
+    {   path : '/dashboard',
+        component: { render (c) { return c('router-view') }},
+        children:[{
+                path:"",
+                component: Dashboard
+            }]
+    },
   ]
 })
