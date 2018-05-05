@@ -2,23 +2,21 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ContentWrapper from '../../components/ContentWrapper'
 import PageTitle from '../../components/PageTitle'
+import SectionHeader from '../../components/SectionHeader'
 
-class Curation extends Component {
+class Preferences extends Component {
   render () {
     return (
       <ContentWrapper>
-        <PageTitle>Curation</PageTitle>
-        <p>
-          Not yet implemented
-        </p>
+        <PageTitle>Preferences</PageTitle>
+        <SectionHeader>Access Control</SectionHeader>
       </ContentWrapper>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-
   return {}
 }
 
-export default connect(mapStateToProps)(Curation)
+export default connect(mapStateToProps)(Preferences)

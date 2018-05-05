@@ -3,12 +3,13 @@ import AddIcon from '@atlaskit/icon/glyph/add';
 import AddonIcon from '@atlaskit/icon/glyph/addon';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import AtlassianIcon from '@atlaskit/icon/glyph/atlassian'
+import Avatar from "@atlaskit/avatar";
 import Button from '@atlaskit/button';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
-import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import CodeIcon from '@atlaskit/icon/glyph/code';
 import ConfluenceIcon from '@atlaskit/icon/glyph/confluence';
 import { ConfluenceWordmark } from '@atlaskit/logo';
+import { connect } from 'react-redux'
 import CrossCircleIcon from '@atlaskit/icon/glyph/cross-circle';
 import DiscoverIcon from '@atlaskit/icon/glyph/discover';
 import EditorAlignLeftIcon from '@atlaskit/icon/glyph/editor/align-left';
@@ -27,6 +28,9 @@ import WorldIcon from '@atlaskit/icon/glyph/world';
 import QuestionIcon from '@atlaskit/icon/glyph/question';
 import { AkSearch } from '@atlaskit/quick-search';
 import HomeFilledIcon from '@atlaskit/icon/glyph/home-filled';
+import sc2 from 'sc2-sdk';
+import selectors from '../selectors'
+
 
 import SecondaryActions from '../components/SecondaryActions';
 import NavigationBase, {
@@ -41,6 +45,12 @@ import NavigationBase, {
 } from '@atlaskit/navigation';
 import atlaskitLogo from '../images/atlaskit.png'
 
+const api = sc2.Initialize({
+  app: 'sylveon',
+  callbackURL: 'http://localhost:1234/',
+  accessToken: '',
+  scope: ['vote', 'comment', 'offline']
+});
 
 const BackIcon = (
   <Tooltip position="right" content="Back">
@@ -97,8 +107,7 @@ const GlobalSearchIcon = ({ openDrawer }) => (
   </Tooltip>
 );
 
-
-export default class Navigation extends Component {
+class Navigation extends Component {
   state = {
     isOpen: true,
     menuLoading: true,
@@ -110,65 +119,84 @@ export default class Navigation extends Component {
           icon={<HomeFilledIcon label="Home icon" size="medium" />}
           isSelected={this.props.location.pathname === "/"}
           href="/"
-        />,
-        <AkNavigationItem
-          text="Activity"
-          icon={<DiscoverIcon label="Activity icon" size="medium" />}
-          isSelected={this.props.location.pathname === "/Activity"}
-          href="/Activity"
-        />,
-        <AkNavigationItem
-          text="Your work"
-          icon={<TrayIcon label="Your work icon" size="medium" />}
-          isSelected={this.props.location.pathname === "/Work"}
-          href="/Work"
-        />,
-        <AkNavigationItem
-          action={
-            <Button
-              appearance="subtle"
-              iconBefore={<ChevronRightIcon label="add" size="medium" />}
-              spacing="none"
-            />
-          }
-          text="Community"
-          onClick={() => this.communityNestedNav()}
-          icon={<PeopleGroupIcon label="Community icon" size="medium" />}
-        />,
-        <AkNavigationItem
-          action={
-            <Button
-              appearance="subtle"
-              iconBefore={<ChevronRightIcon label="add" size="medium" />}
-              spacing="none"
-            />
-          }
-          text="Tools"
-          onClick={() => this.addOnsNestedNav()}
-          icon={<AddonIcon label="Tools icon" size="medium" />}
-        />,
-        <AkNavigationItem
-          text="Settings"
-          icon={<SettingsIcon label="Settings icon" size="medium" />}
-          isSelected={this.props.location.pathname === "/Settings"}
-          href="/Settings"
-        />,
-        <AkNavigationItemGroup title="Other">
-          <AkNavigationItem
-            icon={<EditorFeedbackIcon label="Feedback icon" size="medium" />}
-            text="Give feedback"
-            href="https://discord.gg/JU8zasD"
-          />
-          <AkNavigationItem
-            icon={<WorldIcon label="World icon" size="medium" />}
-            text="Atlaskit"
-            href="https://github.com/r351574nc3/we-resist-bot"
-          />
-        </AkNavigationItemGroup>,
+        />
       ],
     ],
     width: this.props.width,
   };
+
+  secured_stack =  [ [
+    <AkNavigationItem
+      text="Home"
+      icon={<HomeFilledIcon label="Home icon" size="medium" />}
+      isSelected={this.props.location.pathname === "/"}
+      href="/"
+    />,
+    <AkNavigationItem
+      text="Activity"
+      icon={<DiscoverIcon label="Activity icon" size="medium" />}
+      isSelected={this.props.location.pathname === "/Activity"}
+      href="/Activity"
+    />,
+    <AkNavigationItem
+      text="Your work"
+      icon={<TrayIcon label="Your work icon" size="medium" />}
+      isSelected={this.props.location.pathname === "/Work"}
+      href="/Work"
+    />,
+    <AkNavigationItem
+      action={
+        <Button
+          appearance="subtle"
+          iconBefore={<ChevronRightIcon label="add" size="medium" />}
+          spacing="none"
+        />
+      }
+      text="Community"
+      onClick={() => this.communityNestedNav()}
+      icon={<PeopleGroupIcon label="Community icon" size="medium" />}
+    />,
+    <AkNavigationItem
+      action={
+        <Button
+          appearance="subtle"
+          iconBefore={<ChevronRightIcon label="add" size="medium" />}
+          spacing="none"
+        />
+      }
+      text="Tools"
+      onClick={() => this.addOnsNestedNav()}
+      icon={<AddonIcon label="Tools icon" size="medium" />}
+    />,
+    <AkNavigationItem
+      text="Settings"
+      icon={<SettingsIcon label="Settings icon" size="medium" />}
+      isSelected={this.props.location.pathname === "/Settings"}
+      href="/Settings"
+    />,
+    /*
+    <SteemAccountNav navigation={this}/> ,
+    */
+    <AkNavigationItemGroup title="Other">
+      <AkNavigationItem
+        icon={<EditorFeedbackIcon label="Feedback icon" size="medium" />}
+        text="Give feedback"
+        href="https://discord.gg/JU8zasD"
+      />
+      <AkNavigationItem
+        icon={<WorldIcon label="World icon" size="medium" />}
+        text="Atlaskit"
+        href="https://github.com/r351574nc3/we-resist-bot"
+      />
+    </AkNavigationItemGroup>,
+  ] ]
+
+  renderStack = () => { 
+    if (this.props.isAuthenticated) {
+      return this.secured_stack
+    }
+    return this.state.stack
+  }
 
   getCreateDrawer = () => (
     <AkCreateDrawer
@@ -178,15 +206,15 @@ export default class Navigation extends Component {
       onBackButton={this.closeDrawer}
       primaryIcon={<AtlassianIcon label='Atlassian icon' size='large' />}
     >
-      <AkNavigationItem text="Item outside a group" />
-      <AkNavigationItemGroup title="Create item group">
+      <AkNavigationItem text="Stuff in here isn't implemented yet" />
+      <AkNavigationItemGroup title="Automation">
         <AkNavigationItem
-          icon={<ConfluenceIcon label="Confluence icon" />}
-          text="Item with an icon"
+          icon={<CodeIcon label="New Bot" />}
+          text="New Bot"
         />
         <AkNavigationItem
-          icon={<JiraLabsIcon label="Jira icon" />}
-          text="A really, really, quite long, actually super long container name"
+          icon={<CodeIcon label="Mine Data" />}
+          text="Mine Data"
         />
       </AkNavigationItemGroup>
     </AkCreateDrawer>
@@ -321,8 +349,17 @@ export default class Navigation extends Component {
         width={this.state.width}
         hasScrollHintTop
       >
-        <AkContainerNavigationNested stack={this.state.stack} />
+        <AkContainerNavigationNested stack={this.renderStack()} />
       </NavigationBase>
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  const isAuthenticated = selectors.auth.selectAuthenticated(state)
+  const user = selectors.auth.selectUser(state)
+  return { user, isAuthenticated }
+}
+
+export default connect(mapStateToProps)(Navigation)

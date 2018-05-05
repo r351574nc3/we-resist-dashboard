@@ -5,7 +5,7 @@ import {
 } from 'redux'
 import reduxThunk from 'redux-thunk'
 import { routerMiddleware } from 'react-router-redux'
-import rootReducer from './'
+import reducers from '../reducers'
 
 export default function configureStore (initialState = {}, history) {
   // routerMiddleware: Syncs the location / URL path to the redux state
@@ -28,7 +28,7 @@ export default function configureStore (initialState = {}, history) {
   /* eslint-enable */
 
   return createStore(
-    rootReducer,
+    reducers,
     initialState,
     composeEnhancers(...enhancers)
   )

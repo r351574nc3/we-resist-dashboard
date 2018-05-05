@@ -21,7 +21,10 @@ class Space extends Component {
   render () {
     return (
       <ContentWrapper>
-        <PageTitle>Space</PageTitle>
+        <PageTitle>Workspace</PageTitle>
+        <p>
+          Not yet implemented
+        </p>
       </ContentWrapper>
     )
   }

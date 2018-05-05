@@ -1,4 +1,4 @@
-import types from './types'
+import { types } from '../constants'
 
 const showModal = isOpen => ({
   type: types.SHOW_MODAL,

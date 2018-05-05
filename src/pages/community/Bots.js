@@ -8,6 +8,9 @@ class Bots extends Component {
     return (
       <ContentWrapper>
         <PageTitle>Bots</PageTitle>
+        <p>
+          Not yet implemented
+        </p>
       </ContentWrapper>
     )
   }

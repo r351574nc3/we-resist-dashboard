@@ -27,7 +27,6 @@ class Home extends Component {
   }
 
   render () {
-    console.log("Api ", api.getLoginURL())
     return (
       <ContentWrapper>
         <PageTitle>Home</PageTitle>

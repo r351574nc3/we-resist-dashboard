@@ -22,6 +22,9 @@ class Activity extends Component {
     return (
       <ContentWrapper>
         <PageTitle>Activity</PageTitle>
+        <p>
+          Not yet implemented
+        </p>
       </ContentWrapper>
     )
   }

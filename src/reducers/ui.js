@@ -1,4 +1,4 @@
-import types from './types'
+import types from '../constants/types'
 
 const INITIAL_STATE = {
   isModalOpen: false,

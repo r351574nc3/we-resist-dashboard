@@ -7,7 +7,8 @@ class Members extends Component {
   render () {
     return (
       <ContentWrapper>
-
+        <PageTitle>Members</PageTitle>
+        
       </ContentWrapper>
     )
   }

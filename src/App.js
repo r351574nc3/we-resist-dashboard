@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Route } from 'react-router'
 import { connect } from 'react-redux'
+import Cookie from 'js-cookie';
 import Flag, { FlagGroup } from '@atlaskit/flag'
 import Modal from '@atlaskit/modal-dialog'
 import Page from '@atlaskit/page'
@@ -11,14 +12,17 @@ import Bots from './pages/community/Bots'
 import Curation from './pages/community/Curation'
 import Members from './pages/community/Members'
 import Preferences from './pages/community/Preferences'
-import Account from './pages/Account'
+import Account from './pages/profile/Preferences'
 import Activity from './pages/Activity'
 import Settings from './pages/Settings'
 import Space from './pages/Space'
 import Navigation from './components/Navigation'
-import { selectors } from './state'
-import { uiOperations } from './state/ui'
+import selectors from './selectors'
+import actions from './actions'
 import '@atlaskit/css-reset'
+import constants from './constants'
+import querystring from "querystring"
+
 
 class App extends Component {
   static contextTypes = {
@@ -44,6 +48,26 @@ class App extends Component {
     this.props.deleteFlag(dismissedFlagId)
   }
 
+  componentDidMount () {
+    // this is a good place to fill the Redux store with some data needed by the whole application
+    const qs = this.props.location.search && this.props.location.search.startsWith("?") ? this.props.location.search.substring(1) : this.props.location.search
+    const query = querystring.parse(qs)
+    const expires_in = parseInt(query.expires_in)
+    if (query.access_token) {
+      this.props.authenticate(query.username)
+      Cookie.set('access_token', query.access_token, { expires: 1000 * expires_in, path: '' });
+      Cookie.set('username', query.username, { expires: 1000 * expires_in, path: '' });
+    }
+    else {
+      const access_token = Cookie.get('access_token');
+      const username = Cookie.get('username');
+
+      if (access_token && username) {
+        this.props.authenticate(query.username)
+      }
+    }
+  }
+
   render () {
     return (
       <div>
@@ -57,10 +81,10 @@ class App extends Component {
           <Route path='/community/curation' component={Curation} />
           <Route path='/community/members' component={Members} />
           <Route path='/community/preferences' component={Preferences} />
-          <Route path='/account' component={Account} />
+          <Route path='/profile/preferences' component={Account} />
           <Route path='/Settings' component={Settings} />
           <Route path='/Activity' component={Activity} />
-          <Route path='/Space' component={Space} />
+          <Route path='/Work' component={Space} />
         </Page>
         <div>
           <FlagGroup onDismissed={this.onFlagDismissed}>
@@ -95,14 +119,14 @@ class App extends Component {
 }
 
 const mapDispatchToProps = {
-  showModal: uiOperations.showModal,
-  deleteFlag: uiOperations.deleteFlag
+  showModal: actions.uiOperations.showModal,
+  deleteFlag: actions.uiOperations.deleteFlag,
+  authenticate: actions.auth.login
 }
 
 const mapStateToProps = (state) => {
-  const isModalOpen = selectors.selectIsModalOpen(state)
-  const flags = selectors.selectFlags(state)
-
+  const isModalOpen = selectors.ui.selectIsModalOpen(state)
+  const flags = selectors.ui.selectFlags(state)
   return { isModalOpen, flags }
 }
 
