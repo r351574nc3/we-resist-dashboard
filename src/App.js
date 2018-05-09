@@ -12,6 +12,7 @@ import Bots from './pages/community/Bots'
 import Curation from './pages/community/Curation'
 import Members from './pages/community/Members'
 import Preferences from './pages/community/Preferences'
+import Logout from './pages/profile/Logout'
 import Account from './pages/profile/Preferences'
 import Activity from './pages/Activity'
 import Settings from './pages/Settings'
@@ -53,8 +54,10 @@ class App extends Component {
     const qs = this.props.location.search && this.props.location.search.startsWith("?") ? this.props.location.search.substring(1) : this.props.location.search
     const query = querystring.parse(qs)
     const expires_in = parseInt(query.expires_in)
+
+    console.log("Query string access token ", query.access_token)
     if (query.access_token) {
-      this.props.authenticate(query.username)
+      this.props.login(query.username)
       Cookie.set('access_token', query.access_token, { expires: 1000 * expires_in, path: '' });
       Cookie.set('username', query.username, { expires: 1000 * expires_in, path: '' });
     }
@@ -62,8 +65,10 @@ class App extends Component {
       const access_token = Cookie.get('access_token');
       const username = Cookie.get('username');
 
+      console.log("Access token ", access_token)
+      console.log("Username ", username)
       if (access_token && username) {
-        this.props.authenticate(query.username)
+        this.props.login(username)
       }
     }
   }
@@ -82,6 +87,7 @@ class App extends Component {
           <Route path='/community/members' component={Members} />
           <Route path='/community/preferences' component={Preferences} />
           <Route path='/profile/preferences' component={Account} />
+          <Route path='/Logout' component={Logout} />
           <Route path='/Settings' component={Settings} />
           <Route path='/Activity' component={Activity} />
           <Route path='/Work' component={Space} />
@@ -121,7 +127,8 @@ class App extends Component {
 const mapDispatchToProps = {
   showModal: actions.uiOperations.showModal,
   deleteFlag: actions.uiOperations.deleteFlag,
-  authenticate: actions.auth.login
+  login: actions.auth.login,
+  logout: actions.auth.logout
 }
 
 const mapStateToProps = (state) => {

@@ -4,7 +4,7 @@ import AddonIcon from '@atlaskit/icon/glyph/addon';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import AtlassianIcon from '@atlaskit/icon/glyph/atlassian'
 import Avatar from "@atlaskit/avatar";
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import ChevronRightIcon from '@atlaskit/icon/glyph/chevron-right';
 import CodeIcon from '@atlaskit/icon/glyph/code';
 import ConfluenceIcon from '@atlaskit/icon/glyph/confluence';
@@ -28,6 +28,7 @@ import WorldIcon from '@atlaskit/icon/glyph/world';
 import QuestionIcon from '@atlaskit/icon/glyph/question';
 import { AkSearch } from '@atlaskit/quick-search';
 import HomeFilledIcon from '@atlaskit/icon/glyph/home-filled';
+import SteemProfile from '../components/SteemProfile'
 import sc2 from 'sc2-sdk';
 import selectors from '../selectors'
 
@@ -108,38 +109,25 @@ const GlobalSearchIcon = ({ openDrawer }) => (
 );
 
 class Navigation extends Component {
-  state = {
-    isOpen: true,
-    menuLoading: true,
-    openDrawer: null,
-    stack: [
-      [
-        <AkNavigationItem
-          text="Home"
-          icon={<HomeFilledIcon label="Home icon" size="medium" />}
-          isSelected={this.props.location.pathname === "/"}
-          href="/"
-        />
-      ],
-    ],
-    width: this.props.width,
-  };
 
   secured_stack =  [ [
     <AkNavigationItem
       text="Home"
+      key="Home"
       icon={<HomeFilledIcon label="Home icon" size="medium" />}
       isSelected={this.props.location.pathname === "/"}
       href="/"
     />,
     <AkNavigationItem
       text="Activity"
+      key="Activity"
       icon={<DiscoverIcon label="Activity icon" size="medium" />}
       isSelected={this.props.location.pathname === "/Activity"}
       href="/Activity"
     />,
     <AkNavigationItem
       text="Your work"
+      key="Your Work"
       icon={<TrayIcon label="Your work icon" size="medium" />}
       isSelected={this.props.location.pathname === "/Work"}
       href="/Work"
@@ -153,6 +141,7 @@ class Navigation extends Component {
         />
       }
       text="Community"
+      key="Community"
       onClick={() => this.communityNestedNav()}
       icon={<PeopleGroupIcon label="Community icon" size="medium" />}
     />,
@@ -165,35 +154,29 @@ class Navigation extends Component {
         />
       }
       text="Tools"
+      key="Tools"
       onClick={() => this.addOnsNestedNav()}
       icon={<AddonIcon label="Tools icon" size="medium" />}
     />,
-    <AkNavigationItem
-      text="Settings"
-      icon={<SettingsIcon label="Settings icon" size="medium" />}
-      isSelected={this.props.location.pathname === "/Settings"}
-      href="/Settings"
-    />,
-    /*
-    <SteemAccountNav navigation={this}/> ,
-    */
-    <AkNavigationItemGroup title="Other">
-      <AkNavigationItem
-        icon={<EditorFeedbackIcon label="Feedback icon" size="medium" />}
-        text="Give feedback"
-        href="https://discord.gg/JU8zasD"
-      />
-      <AkNavigationItem
-        icon={<WorldIcon label="World icon" size="medium" />}
-        text="Atlaskit"
-        href="https://github.com/r351574nc3/we-resist-bot"
-      />
-    </AkNavigationItemGroup>,
-  ] ]
+  ], ]
+  
+  state = {
+    isOpen: true,
+    menuLoading: true,
+    openDrawer: null,
+    stack: this.secured_stack,
+    width: this.props.width,
+  };
 
-  renderStack = () => { 
-    if (this.props.isAuthenticated) {
-      return this.secured_stack
+  secured_keys = [ 'Activity', 'Your Work', 'Tools', 'Settings', 'Community', 'Account' ]
+
+  renderStack = () => {
+    if (!this.props.isAuthenticated) {
+      return this.state.stack.map((stack) => {
+        return stack.filter((item) => {
+          return item.key && !this.secured_keys.includes(item.key)
+        })
+      })
     }
     return this.state.stack
   }
@@ -251,6 +234,17 @@ class Navigation extends Component {
         ...this.state.stack,
         [
           <AkNavigationItem
+            key="Relationships"
+            icon={<PeopleIcon label="Relationships" />}
+            text="Relationships"
+          />,
+          <AkNavigationItem
+            key="Friend Graph"
+            icon={<PeopleIcon label="Friend Graph" />}
+            text="Friend Graph"
+          />,
+          <AkNavigationItem
+            key="Questions"
             icon={<QuestionIcon label="Question" />}
             text="Questions"
           />,
@@ -266,24 +260,28 @@ class Navigation extends Component {
         [
           <AkNavigationItem
           text="Members"
+          key="Members"
           icon={<PeopleIcon label="People icon" size="medium" />}
           isSelected={this.props.location.pathname === "/community/members"}
           href="/community/members"
           />,
           <AkNavigationItem
           text="Curation"
+          key="Curation"
           icon={<TrayIcon label="Tray icon" size="medium" />}
           isSelected={this.props.location.pathname === "/community/curation"}
           href="/community/curation"
           />,
           <AkNavigationItem
           text="Bots"
+          key="Bots"
           icon={<CodeIcon label="Code icon" size="medium" />}
           isSelected={this.props.location.pathname === "/community/bots"}
           href="/community/bots"
           />,
           <AkNavigationItem
           text="Preferences"
+          key="Preferences"
           icon={<PreferencesIcon label="Preferences icon" size="medium" />}
           isSelected={this.props.location.pathname === "/community/preferences"}
           href="/community/preferences"
@@ -348,9 +346,30 @@ class Navigation extends Component {
         onResizeStart={e => console.log('resizeStart', e)}
         width={this.state.width}
         hasScrollHintTop
+        globalSecondaryActions={[
+          <AkNavigationItem
+          key="Feedback"
+          tooltip="Give Feedback"
+          icon={<EditorFeedbackIcon label="Feedback icon" size="medium" />}
+          text="Give feedback"
+          href="https://discord.gg/JU8zasD"
+        />,
+        <AkNavigationItem
+          key="Atlaskit"
+          icon={<WorldIcon label="World icon" size="medium" />}
+          text="Atlaskit"
+          href="https://github.com/r351574nc3/we-resist-bot"
+        />,<SteemProfile navigation={this}/>,  
+        <AkNavigationItem
+          text="Settings"
+          key="Settings"
+          icon={<SettingsIcon label="Settings icon" size="medium" />}
+          href="/Settings"
+        />
+    ]}
       >
         <AkContainerNavigationNested stack={this.renderStack()} />
-      </NavigationBase>
+      </NavigationBase> 
     );
   }
 }
