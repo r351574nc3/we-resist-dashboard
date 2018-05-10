@@ -34,6 +34,9 @@ const api = sc2.Initialize({
   });
 
 class SteemProfile extends Component {
+    getLoginUrl() {
+        return "https://v2.steemconnect.com/oauth2/authorize?client_id=sylveon&response_type=code&redirect_uri=http%3A%2F%2Flocalhost:1234%2F&scope=vote,comment,offline";
+    }
 
     render() {
         this.parent = this.props.navigation
@@ -58,7 +61,7 @@ class SteemProfile extends Component {
             <AkNavigationItem
                 icon={<SignInIcon name="medium" size="medium" />}
                 text="Login"
-                href={api.getLoginURL()}
+                href={this.getLoginUrl()}
             />
         )
     }

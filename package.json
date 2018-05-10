@@ -5,6 +5,7 @@
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html --public-url ./",
+    "server": "node index.js",
     "lint": "./node_modules/.bin/standard",
     "lint-fix": "./node_modules/.bin/standard --fix"
   },
@@ -39,11 +40,13 @@
     "@atlaskit/quick-search": "latest",
     "@atlaskit/theme": "latest",
     "babel-runtime": "^6.26.0",
+    "bluebird": "^3.5.1",
     "express": "^4.16.3",
     "history": "^4.7.2",
     "js-cookie": "^2.2.0",
     "moment": "^2.22.1",
     "npm": "^6.0.0",
+    "pg": "^7.4.3",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -54,7 +57,12 @@
     "redux": "^3.7.2",
     "redux-auth-wrapper": "^2.0.2",
     "redux-thunk": "^2.2.0",
-    "sc2-sdk": "^1.0.2"
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
+    "sc2-sdk": "^1.0.2",
+    "sequelize": "^4.37.7",
+    "sequelize-encrypted": "^1.0.0",
+    "steem": "^0.7.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
