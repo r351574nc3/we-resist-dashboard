@@ -1,37 +1,75 @@
 {
   "name": "we-resist-dashboard",
   "version": "0.1.0",
-  "private": true,
+  "description": "We-resist dashboard",
   "scripts": {
-    "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html --public-url ./",
+    "server": "node index.js",
+    "lint": "./node_modules/.bin/standard",
+    "lint-fix": "./node_modules/.bin/standard --fix"
   },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "dist/*"
+    ]
+  },
+  "keywords": [],
+  "author": "r351574nc3",
+  "license": "MIT",
   "dependencies": {
-    "bootstrap": "^4.0.0",
-    "chart.js": "^2.7.2",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1",
-    "npm": "^5.7.1",
-    "popper.js": "^1.12.9",
-    "register-service-worker": "^1.0.0",
-    "sass-loader": "^6.0.7",
-    "vue": "^2.5.13",
-    "vue-chartjs": "^3.2.1",
-    "vue-class-component": "^6.0.0",
-    "vue-property-decorator": "^6.0.0",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "@atlaskit/avatar": "latest",
+    "@atlaskit/banner": "latest",
+    "@atlaskit/button": "latest",
+    "@atlaskit/css-reset": "latest",
+    "@atlaskit/dropdown-menu": "latest",
+    "@atlaskit/dynamic-table": "latest",
+    "@atlaskit/field-range": "latest",
+    "@atlaskit/field-text": "latest",
+    "@atlaskit/field-text-area": "latest",
+    "@atlaskit/flag": "latest",
+    "@atlaskit/icon": "latest",
+    "@atlaskit/inline-edit": "latest",
+    "@atlaskit/logo": "latest",
+    "@atlaskit/modal-dialog": "latest",
+    "@atlaskit/navigation": "latest",
+    "@atlaskit/onboarding": "latest",
+    "@atlaskit/page": "latest",
+    "@atlaskit/page-header": "latest",
+    "@atlaskit/quick-search": "latest",
+    "@atlaskit/theme": "latest",
+    "babel-runtime": "^6.26.0",
+    "bluebird": "^3.5.1",
+    "express": "^4.16.3",
+    "history": "^4.7.2",
+    "js-cookie": "^2.2.0",
+    "moment": "^2.22.1",
+    "npm": "^6.0.0",
+    "pg": "^7.4.3",
+    "prop-types": "^15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-auth-wrapper": "^2.0.2",
+    "redux-thunk": "^2.2.0",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
+    "sc2-sdk": "^1.0.2",
+    "sequelize": "^4.37.7",
+    "sequelize-encrypted": "^1.0.0",
+    "steem": "^0.7.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-pwa": "^3.0.0-beta.3",
-    "@vue/cli-plugin-typescript": "^3.0.0-beta.3",
-    "@vue/cli-service": "^3.0.0-beta.3",
-    "node-sass": "^4.7.2",
-    "vue-template-compiler": "^2.5.13"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-react-app": "^3.1.1",
+    "parcel-bundler": "latest",
+    "standard": "^11.0.1"
+  }
 }
