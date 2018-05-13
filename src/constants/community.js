@@ -1,0 +1,2 @@
+export const PREFERENCES_SAVED = 'community/PREFERENCES_SAVED';
+export const PREFERENCES_LOADED = 'community/PREFERENCES_LOADED';
