@@ -1,5 +1,12 @@
 import * as constants from '../constants/auth'
 
+export const initiate = data => dispatch => {
+    const action = {
+        type: constants.AUTH_INITIATED,
+        payload: data
+    }
+    dispatch(action)
+}
 
 export const login = data => dispatch => {
     console.log("Logging in ", data)

@@ -15,6 +15,8 @@ import {
   SpotlightTarget,
 } from '@atlaskit/onboarding';
 import Tooltip from '@atlaskit/tooltip';
+import selectors from './selectors'
+import actions from './actions'
 
 class Preferences extends Component {
   state = {
@@ -48,7 +50,9 @@ class Preferences extends Component {
     </ButtonGroup>
   );
 
-
+  componentDidMount () {
+    this.props.preferencesLoaded()
+  }
 
   render () {
     
@@ -111,7 +115,11 @@ class Preferences extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  const preferences = selectors.community.selectPreferences(state)
+  return { preferences }
 }
-
-export default connect(mapStateToProps)(Preferences)
+const mapDispatchToProps = {
+  preferencesLoaded: actions.community.preferencesLoaded,
+  preferencesChanged: actions.community.preferencesChanged,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Preferences)

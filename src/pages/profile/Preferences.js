@@ -19,4 +19,5 @@ const mapStateToProps = (state) => {
   return {}
 }
 
+
 export default connect(mapStateToProps)(Preferences)

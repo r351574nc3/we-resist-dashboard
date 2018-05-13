@@ -378,6 +378,7 @@ class Navigation extends Component {
 const mapStateToProps = (state) => {
   const isAuthenticated = selectors.auth.selectAuthenticated(state)
   const user = selectors.auth.selectUser(state)
+
   return { user, isAuthenticated }
 }
 

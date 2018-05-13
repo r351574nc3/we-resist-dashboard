@@ -14,8 +14,19 @@ var app = express();
 app.use(express.static(path.join(__dirname,"./dist")));
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+app.get('/@:username/preferences', Preferences.get)
+
+app.put('/@:user/preferences', Preferences.put)
+
+app.post('/@:user/preferences', Preferences.post)
+
+app.delete('/@:user/preferences', Preferences.delete)
+
 app.get("/*", (req, res) => {
-    res.sendFile('index.html', { root: './dist' })
+    const path = req.path.substring(req.path.lastIndexOf("/") + 1)
+    const filename = path.endsWith("/") || path.indexOf(".") < 0 ? "index.html" : path
+
+    res.sendFile(filename, { root: './dist' })
 })
 
 app.listen(1234, function(){

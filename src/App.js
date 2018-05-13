@@ -23,6 +23,7 @@ import actions from './actions'
 import '@atlaskit/css-reset'
 import constants from './constants'
 import querystring from "querystring"
+import { user, wif, sc2_secret } from './config'
 
 
 class App extends Component {
@@ -56,20 +57,57 @@ class App extends Component {
     const expires_in = parseInt(query.expires_in)
 
     console.log("Query string access token ", query.access_token)
-    if (query.access_token) {
-      this.props.login(query.username)
-      Cookie.set('access_token', query.access_token, { expires: 1000 * expires_in, path: '' });
-      Cookie.set('username', query.username, { expires: 1000 * expires_in, path: '' });
+    const sc2_token = Cookie.get("sc2_token") ? JSON.parse(Cookie.get("sc2_token")) : undefined
+    if (sc2_token) {
+      console.log("sc2_token ", sc2_token)
+      this.props.login(sc2_token)
     }
-    else {
-      const access_token = Cookie.get('access_token');
-      const username = Cookie.get('username');
-
-      console.log("Access token ", access_token)
-      console.log("Username ", username)
-      if (access_token && username) {
-        this.props.login(username)
+    else if (query.access_token) {
+      const token = {
+        access_token: query.access_token,
+        username: query.username,
+        expires_in: query.expires_in
       }
+      Cookie.set('sc2_token', token, { expires: 1000 * expires_in, path: '' });
+      this.props.login(token)
+    }
+    else if (query.code) {
+      this.props.initiateAuth()
+      const steemconnect_body = new FormData()
+      steemconnect_body.append('json', 
+        JSON.stringify({
+          response_type: "refresh",
+          code: query.code,
+          client_id: "sylveon",
+          client_secret: sc2_secret,
+          scope: "vote,comment,offline"
+        })
+      )
+      fetch("https://steemconnect.com/api/oauth2/token",
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify({
+            response_type: "refresh",
+            code: query.code,
+            client_id: "sylveon",
+            client_secret: sc2_secret,
+            scope: "vote,comment,offline"
+          })
+        })
+        .then((response) => response.json())
+        .then((token) => {
+          if (!token || !token.error) {
+            Cookie.set('sc2_token', token, { expires: 1000 * token.expires_in, path: '' });
+            this.props.login(token)
+          }
+        })
+        .catch((error) => {
+          console.log("Error ", error)
+        })
     }
   }
 
@@ -127,6 +165,7 @@ class App extends Component {
 const mapDispatchToProps = {
   showModal: actions.uiOperations.showModal,
   deleteFlag: actions.uiOperations.deleteFlag,
+  initiateAuth: actions.auth.initiate,
   login: actions.auth.login,
   logout: actions.auth.logout
 }
