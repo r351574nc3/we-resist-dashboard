@@ -4,6 +4,6 @@ import community from "./community"
 
 export default {
     ui,
+    community,
     auth,
-    community
 }

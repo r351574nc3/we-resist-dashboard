@@ -56,10 +56,8 @@ class App extends Component {
     const query = querystring.parse(qs)
     const expires_in = parseInt(query.expires_in)
 
-    console.log("Query string access token ", query.access_token)
     const sc2_token = Cookie.get("sc2_token") ? JSON.parse(Cookie.get("sc2_token")) : undefined
     if (sc2_token) {
-      console.log("sc2_token ", sc2_token)
       this.props.login(sc2_token)
     }
     else if (query.access_token) {

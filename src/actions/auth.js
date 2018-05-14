@@ -9,7 +9,6 @@ export const initiate = data => dispatch => {
 }
 
 export const login = data => dispatch => {
-    console.log("Logging in ", data)
     const action = {
         type: constants.AUTH_SUCCESS,
         payload: data 
@@ -18,7 +17,6 @@ export const login = data => dispatch => {
 }
 
 export const logout = data => dispatch => {
-    console.log("Data ", data)
     const action = {
         type: constants.AUTH_FAIL,
         payload: data

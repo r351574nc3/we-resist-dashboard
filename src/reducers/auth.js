@@ -22,7 +22,7 @@ function fetch_preferences(user) {
     .then((response) => response.json())
 }
   
-export default function userUpdate(state = initialState, { type, payload }) {
+export default (state = initialState, { type, payload }) => {
   switch (type) {
     case constants.auth.AUTH_INITIATED:
       return state

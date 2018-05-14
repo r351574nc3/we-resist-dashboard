@@ -95,8 +95,6 @@ const mapStateToProps = (state) => {
     const isAuthenticated = selectors.auth.selectAuthenticated(state)
     const user = selectors.auth.selectUser(state)
 
-    console.log("State nav ", state)
-    
     return { user, isAuthenticated }
 }
   

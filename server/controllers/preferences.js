@@ -61,11 +61,7 @@ function handle_prefs_from_database(username, refresh_token, access_token, res) 
     return models.Preferences.findOne({ where: { username: username } })
         .then(prefs => {
             var preferences = prefs.dataValues
-            res.send({refresh_token: refresh_token,
-                access_token: access_token,
-                username: username,
-                preferences: preferences
-            })
+            res.send(preferences)
         }).catch(err => {
             models.Preferences.create({
                 username: username,
@@ -74,11 +70,7 @@ function handle_prefs_from_database(username, refresh_token, access_token, res) 
                 threshold: 100.00
             })
             .then((preferences) => {
-                res.send({refreshcv_token: refresh_token,
-                    access_token: access_token,
-                    username: username,
-                    preferences: preferences
-                })
+                res.send(preferences)
             })
         })
 }
