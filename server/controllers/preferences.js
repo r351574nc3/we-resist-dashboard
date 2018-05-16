@@ -4,12 +4,11 @@ const { db_url, sc2_secret } = require('../config')
 const Sequelize = require('sequelize')
 const models = require('../models')
 const Promise = require('bluebird')
-const sc2 = Promise.promisifyAll(require ('sc2-sdk'))
-const steem = Promise.promisifyAll(require('steem'))
+const sc2 = require ('sc2-sdk')
+const steem = require('steem')
 const rp = require('request-promise');
 const querystring = require("querystring");
-
-var pg = require('pg');
+const pg = require('pg');
 pg.defaults.ssl = true;
 const sequelize = new Sequelize(db_url, { ssl: true })
 
@@ -25,6 +24,8 @@ function get_preferences(req, res) {
     let access_token = req.query.access_token
     let refresh_token = req.query.refresh_token
 
+    console.log("Fetching preferences")
+
     let api = sc2.Initialize({
         app: 'we-resist',
         callbackURL: 'https://we-resist-bot.herokuapp.com/',
@@ -36,6 +37,7 @@ function get_preferences(req, res) {
     return new Promise((resolve, reject) => {
         let retval = false
         api.me(function (err, me) {
+            console.log("Me ", me.user)
                 if (me.user !== username) {
                     retval = false
                     reject(retval)
@@ -55,16 +57,11 @@ function get_preferences(req, res) {
 }
 
 function handle_prefs_from_database(username, refresh_token, access_token, res) {
-    return models.Preferences.findOne({where: { username: username } })
+    console.log("Username ", username)
+    return models.Preferences.findOne({ where: { username: username } })
         .then(prefs => {
             var preferences = prefs.dataValues
-            res.render('pages/index', {
-                redirect: 'https://we-resist-bot.herokuapp.com/',
-                refresh_token: refresh_token,
-                access_token: access_token,
-                username: username,
-                preferences: preferences
-            })
+            res.send(preferences)
         }).catch(err => {
             models.Preferences.create({
                 username: username,
@@ -73,13 +70,7 @@ function handle_prefs_from_database(username, refresh_token, access_token, res) 
                 threshold: 100.00
             })
             .then((preferences) => {
-                res.render('pages/index', {
-                    redirect: 'https://we-resist-bot.herokuapp.com/',
-                    refresh_token: refresh_token,
-                    access_token: access_token,
-                    username: username,
-                    preferences: preferences
-                })
+                res.send(preferences)
             })
         })
 }
@@ -113,13 +104,21 @@ function post_preferences(req, res) {
         refreshToken: req.body.refresh_token
     }
 
+    /*
     var api = sc2.Initialize({
         app: 'we-resist',
         callbackURL: 'https://we-resist-bot.herokuapp.com/',
         accessToken: req.body.access_token,
         scope: ['vote', 'comment', 'offline']
       })
-
+*/
+      var api = sc2.Initialize({
+        app: 'sylveon',
+        callbackURL: 'http://localhost:1234/',
+        accessToken: req.body.access_token,
+        scope: ['vote', 'comment', 'offline']
+      })
+      
     return new Promise((resolve, reject) => {
         let retval
         api.me((err, me) => {
@@ -130,8 +129,6 @@ function post_preferences(req, res) {
             })
         })
         .then((username) => {
-        
-            console.log("Looking for preferences for ", username)
             models.Preferences.find({ where: { username: username }})
                 .then((prefs) => {
                     prefs.update(updatedValue)

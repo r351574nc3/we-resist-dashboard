@@ -18,8 +18,7 @@ class Logout extends Component {
   }
 
   componentDidMount () {
-    Cookie.remove('access_token')
-    Cookie.remove('username')
+    Cookie.remove('sc2_token')
     this.props.logout()
   }
 }
@@ -30,7 +29,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   const isAuthenticated = selectors.auth.selectAuthenticated(state)
-
   return { isAuthenticated }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Logout)

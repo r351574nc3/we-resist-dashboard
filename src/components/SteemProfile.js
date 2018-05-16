@@ -40,7 +40,7 @@ class SteemProfile extends Component {
 
     render() {
         this.parent = this.props.navigation
-        const avatar_src = 'https://steemitimages.com/u/' + this.props.user + '/avatar'
+        const avatar_src = this.props.user ? 'https://steemitimages.com/u/' + this.props.user.username + '/avatar' : ''
 
         if (this.props.isAuthenticated) {
             return (
@@ -94,6 +94,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => {
     const isAuthenticated = selectors.auth.selectAuthenticated(state)
     const user = selectors.auth.selectUser(state)
+
     return { user, isAuthenticated }
 }
   

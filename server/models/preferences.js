@@ -18,7 +18,9 @@ module.exports = (sequelize, DataTypes) => {
     downvoteWeight: DataTypes.DECIMAL,
     threshold: DataTypes.DECIMAL,
     wif: DataTypes.STRING,
-    refreshToken: DataTypes.STRING
+    refreshToken: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   }, {
     classMethods: {
       associate: function(models) {
