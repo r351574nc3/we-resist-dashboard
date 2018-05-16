@@ -47,11 +47,37 @@ class Preferences extends Component {
     });
   };
 
-  headerButtons = (
-    <ButtonGroup>
-      <Button appearance="primary">Save Voting</Button>
-    </ButtonGroup>
-  );
+  isPreferencesSaved = () => {
+    return this.props.prefs_saved 
+  }
+
+  createHeaderButtons = () => {
+    if (this.props.prefs_saving) {
+      return (
+        <ButtonGroup>
+          <Button appearance="primary"
+              isDisabled
+              iconAfter={<Spinner />}
+          >Save Voting</Button>
+        </ButtonGroup>
+      );
+  
+    }
+
+    return (
+      <ButtonGroup>
+        <Button appearance="primary" 
+            onClick={() => {
+                this.props.start_saving()
+                this.save_preferences(this.props.preferences)
+                  .then((results) => {
+                    this.props.save_preferences(this.props.preferences)
+                  })
+              }
+            }>Save Voting</Button>
+      </ButtonGroup>
+    );
+  }
 
   fetch_preferences(user) {
     if (!user || !user.username) {
@@ -63,6 +89,36 @@ class Preferences extends Component {
     const preferences_url = '/@' + username + '/preferences?' + qs
     return fetch(preferences_url)
       .then((response) => response.json())
+  }
+  
+  get_access_token() {
+    return Cookie.get('sc2_token') ? JSON.parse(Cookie.get('sc2_token')).access_token : undefined
+  }
+
+  save_preferences(preferences) {
+    const body = JSON.stringify({ ...preferences, access_token: this.get_access_token() })
+
+    if (!preferences || !preferences.username) {
+        return Promise.reject("Not logged in")
+    }
+
+    const username = preferences.username
+    const preferences_url = '/@' + username + '/preferences'
+
+    return fetch(preferences_url,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: body
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Response data ", data)
+            return data
+        })
   }
 
   componentDidMount () {
@@ -84,7 +140,7 @@ class Preferences extends Component {
           <PageTitle>Preferences</PageTitle>
           <hr />
           <PageHeader
-            actions={this.headerButtons}
+            actions={this.createHeaderButtons()}
           >Voting (Set your upvote/downvote preferences)
           </PageHeader>
           <Grid layout="fixed">
@@ -157,9 +213,12 @@ class Preferences extends Component {
 
 const mapStateToProps = (state) => {
   const preferences = selectors.community.selectPreferences(state)
-  return { preferences }
+  const prefs_saved = selectors.community.selectPrefsSaved(state)
+  const prefs_saving = selectors.community.selectPrefsSaving(state)
+  return { preferences, prefs_saved, prefs_saving }
 }
 const mapDispatchToProps = {
+  start_saving: actions.community.start_saving,
   load_preferences: actions.community.load_preferences,
   save_preferences: actions.community.save_preferences,
   upvoteChanged: actions.community.change_upvote,

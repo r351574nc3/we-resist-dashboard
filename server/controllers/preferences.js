@@ -104,13 +104,21 @@ function post_preferences(req, res) {
         refreshToken: req.body.refresh_token
     }
 
+    /*
     var api = sc2.Initialize({
         app: 'we-resist',
         callbackURL: 'https://we-resist-bot.herokuapp.com/',
         accessToken: req.body.access_token,
         scope: ['vote', 'comment', 'offline']
       })
-
+*/
+      var api = sc2.Initialize({
+        app: 'sylveon',
+        callbackURL: 'http://localhost:1234/',
+        accessToken: req.body.access_token,
+        scope: ['vote', 'comment', 'offline']
+      })
+      
     return new Promise((resolve, reject) => {
         let retval
         api.me((err, me) => {
@@ -121,8 +129,6 @@ function post_preferences(req, res) {
             })
         })
         .then((username) => {
-        
-            console.log("Looking for preferences for ", username)
             models.Preferences.find({ where: { username: username }})
                 .then((prefs) => {
                     prefs.update(updatedValue)

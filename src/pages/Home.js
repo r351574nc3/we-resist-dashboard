@@ -31,19 +31,6 @@ class Home extends Component {
       <ContentWrapper>
         <PageTitle>Home</PageTitle>
         <MainSection />
-        <Grid layout="fluid">
-            <GridColumn medium={4}>
-            </GridColumn>
-            <GridColumn medium={4}>
-              <Button appearance="primary" href={api.getLoginURL()}>Login with Steemconnect</Button>
-            </GridColumn>
-            <GridColumn medium={3}>
-            </GridColumn>
-            <GridColumn medium={1}>
-            </GridColumn>
-            <GridColumn>
-            </GridColumn>
-          </Grid>
       </ContentWrapper>
     )
   }
