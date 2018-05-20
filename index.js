@@ -34,5 +34,5 @@ app.get("/*", (req, res) => {
 })
 
 app.listen(1234, function(){
-    console.log("Started listening on port", 1234);
+    console.log("Started listening on port", process.env.PORT);
 })
