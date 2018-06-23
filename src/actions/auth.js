@@ -23,3 +23,11 @@ export const logout = data => dispatch => {
     }
     dispatch(action)
 }
+
+export const assign_role = data => dispatch => {
+    const action = {
+        type: constants.ROLE_ASSIGNED,
+        payload: data
+    }
+    dispatch(action)
+}

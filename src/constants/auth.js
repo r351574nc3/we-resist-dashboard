@@ -4,3 +4,4 @@ export const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
 export const AUTH_INITIATED = 'auth/AUTH_INITIATED';
 export const AUTH_SUCCESS = 'auth/AUTH_SUCCESS';
 export const AUTH_FAIL = 'auth/AUTH_FAIL';
+export const ROLE_ASSIGNED = 'auth/ROLE_ASSIGNED';
