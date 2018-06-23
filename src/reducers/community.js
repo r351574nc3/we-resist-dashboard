@@ -46,6 +46,10 @@ export default (state = INITIAL_STATE, action) => {
                     threshold: action.value
                 } 
             }
+        case constants.REMOVE_MEMBERS:
+            return { ...state, 
+                members: action.value
+            }
         default:
             return state
   }

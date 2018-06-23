@@ -54,3 +54,11 @@ export const change_threshold = data => dispatch => {
     }
     dispatch(action)    
 }
+
+export const remove_selected_members = data => dispatch => {
+    const action = {
+        type: constants.REMOVE_MEMBERS,
+        value: data
+    }
+    dispatch(action)    
+}
